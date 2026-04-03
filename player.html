@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raja AI - Player</title>
+    <style>
+        body { background: #000; color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        .video-container { width: 100%; max-width: 900px; height: 60vh; background: #111; margin-top: 10px; border: 1px solid #333; }
+        .back-btn { background: #333; color: white; border: none; padding: 10px 20px; margin: 20px; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .back-btn:hover { background: #444; }
+        h3 { padding: 0 15px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="video-container" id="player">
+        <p style="text-align:center; padding-top:20vh;">वीडियो लोड हो रहा है...</p>
+    </div>
+    
+    <div id="details"></div>
+
+    <a href="index.html" class="back-btn">← पीछे जाएँ</a>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const fileId = params.get('id');
+        
+        if(fileId) {
+            // टेलीग्राम एम्बेड लिंक - आपका चैनल ID यहाँ इस्तेमाल होगा
+            document.getElementById('player').innerHTML = `
+                <iframe src="https://t.me/c/8528668387/${fileId}?embed=1" 
+                width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
+        } else {
+            document.getElementById('player').innerHTML = "<p>कोई वीडियो नहीं मिला!</p>";
+        }
+    </script>
+</body>
+</html>
