@@ -1,54 +1,126 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raja AI Cinema - Home</title>
-    <style>
-        body { background: #0f0f0f; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 10px; }
-        header { text-align: center; padding: 20px; border-bottom: 2px solid #ff0000; margin-bottom: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; margin: auto; }
-        .card { background: #1e1e1e; border-radius: 15px; overflow: hidden; cursor: pointer; transition: 0.3s; border: 1px solid #333; }
-        .card:hover { transform: translateY(-5px); border-color: #ff0000; }
-        .thumb { height: 160px; background: linear-gradient(45deg, #2c3e50, #000000); display: flex; align-items: center; justify-content: center; font-size: 50px; position: relative; }
-        .thumb::after { content: '▶'; color: rgba(255,255,255,0.7); font-size: 40px; }
-        .info { padding: 15px; }
-        .info b { display: block; font-size: 18px; margin-bottom: 8px; color: #efefef; }
-        .info p { font-size: 14px; color: #aaaaaa; margin: 0; line-height: 1.4; }
-        #loading { text-align: center; font-size: 20px; margin-top: 50px; }
-    </style>
+  <title>My Video App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: white;
+      margin: 0;
+    }
+
+    header {
+      background: red;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .container {
+      padding: 10px;
+    }
+
+    .video-card {
+      background: #222;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 200px;
+      border-radius: 10px;
+    }
+
+    h3 {
+      margin: 5px 0;
+    }
+
+    .upload-box {
+      background: #222;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      background: red;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>RAJA AI CINEMA 🎬</h1>
-    </header>
 
-    <div id="loading">वीडियो लोड हो रहे हैं, कृपया रुकें...</div>
-    <div class="grid" id="container"></div>
+<header>🎬 My Video App</header>
 
-    <script>
-        const url = "https://script.google.com/macros/s/AKfycbxElIvZDEl9zub_Gk1WcbbYet5ttuAFQAGufQLeD2U3B7JatospO0CVWweBNeRne9mPvA/exec";
-        
-        fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('loading').style.display = 'none';
-            let html = "";
-            data.reverse().forEach(v => {
-                html += `
-                <div class="card" onclick="window.location.href='player.html?id=${v.fileId}'">
-                    <div class="thumb"></div>
-                    <div class="info">
-                        <b>${v.title}</b>
-                        <p>${v.description}</p>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('container').innerHTML = html;
-        })
-        .catch(err => {
-            document.getElementById('loading').innerText = "सर्वर से कनेक्ट नहीं हो पा रहा है।";
-        });
-    </script>
+<div class="upload-box">
+  <h3>Upload Video</h3>
+  <input id="title" placeholder="Title">
+  <textarea id="desc" placeholder="Description"></textarea>
+  <input id="fileId" placeholder="Telegram File ID">
+  <button onclick="upload()">Upload</button>
+</div>
+
+<div class="container" id="videos"></div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbzISaC1L-J-gQr6WwHT6FIT7vzGStoXhuGViorcB4PswSR9ZJGLUKJcxwdySNhyX6oUxw/exec";
+
+// Load videos
+function loadVideos() {
+  fetch(API)
+    .then(res => res.json())
+    .then(data => {
+      let html = "";
+
+      data.forEach(v => {
+        html += `
+          <div class="video-card">
+            <h3>${v.title}</h3>
+            <p>${v.description}</p>
+          </div>
+        `;
+      });
+
+      document.getElementById("videos").innerHTML = html;
+    });
+}
+
+// Upload video
+function upload() {
+  let data = {
+    title: document.getElementById("title").value,
+    description: document.getElementById("desc").value,
+    fileId: document.getElementById("fileId").value
+  };
+
+  fetch(API, {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+  .then(res => res.text())
+  .then(() => {
+    alert("Upload Success ✅");
+    loadVideos();
+  });
+}
+
+loadVideos();
+</script>
+
 </body>
 </html>
